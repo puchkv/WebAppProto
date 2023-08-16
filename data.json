@@ -1,0 +1,55 @@
+{
+    "stage_work_code": "000010SS1________24830",
+    "stage_work": "Розробка траншей 0,7м",
+    "stage": "Організація кабеля AC",
+    "stage_code": "000010SS1________24840",
+    "date": "2023-07-11T21:00:00.000Z",
+    "unit": "пог.м",
+    "brigade_size": 6,
+    "persons_list": [
+        {
+            "fio": "Князєва Юлія Миколаївна",
+            "inn": "3118512580",
+            "tabnum": "   6414",
+            "absent": false,
+            "enteredTime": 1
+        },
+        {
+            "fio": "Кожевін Микола Єгорович",
+            "inn": "3430213899",
+            "tabnum": "  15555",
+            "absent": true,
+            "enteredTime": 2
+        },
+        {
+            "fio": "Кравець Олег Сергійович",
+            "inn": "3331105996",
+            "tabnum": "  15557",
+            "absent": false,
+            "enteredTime": 2
+        },
+        {
+            "fio": "Пучков Євген Едуардович",
+            "inn": "3602101372",
+            "tabnum": "  16390",
+            "absent": false,
+            "enteredTime": 10
+        },
+        {
+            "fio": "Суслова Ірина Борисівна",
+            "inn": "3086927860",
+            "tabnum": "  15018",
+            "absent": false,
+            "enteredTime": 2
+        },
+        {
+            "fio": "Фомін Владислав Олександрович",
+            "inn": "3591609858",
+            "tabnum": "  15552",
+            "absent": false,
+            "enteredTime": 2
+        }
+    ],
+    "plan_amount": 1,
+    "fact_amount": 105
+}

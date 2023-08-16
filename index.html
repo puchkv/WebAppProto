@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web app proto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main>
+        
+        <h1 class="header-title" id="title">
+            <!-- Сюди завантажується заголовок -->
+        </h1>
+
+        <div class="roulette rounded" id="project-data">
+            <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <img src="/icons/tools.svg" alt="tools">
+                    </span>
+                    <p>Проект</p>
+                </div>
+                <div class="value" id="project-name">
+                    <!-- Сюди завантажується назва проекту -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <img src="/icons/calendar.svg" alt="calendar">
+                    </span>
+                    <p>Терміни</p>
+                </div>
+                <div class="value" id="project-terms">
+                    <!-- Дата / період / терміни -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <img src="/icons/note.svg" alt="note">
+                    </span>
+                    <p>План / Факт</p>
+                </div>
+                <div class="value" id="project-exec">
+                    <!-- Розрахунок план-факту -->
+                </div>
+            </div>
+
+
+            <!-- <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <img src="/icons/currency.svg" alt="currency">
+                    </span>
+                    <p>Розцінка / норма</p>
+                </div>
+                <div class="value">
+                    €2.44 / 0.3 год/шт
+                </div>
+            </div> -->
+        </div>
+
+        <span class="volume-label">Розподіл фактичних обсягів</span>
+
+        <div class="rounded">
+            <!-- Тут вставляємо кількість і одиницю виміру -->
+            <input class="input-row rounded outlined" type="number" name="count"
+                placeholder="" id="fact-count"> 
+        </div>
+
+        <div class="cards" id="cards">
+            <!-- Сюди вантажимо картки -->
+        </div>
+
+        <!-- <div class = "summary rounded" id="summary">
+            <span>Всього</span>
+            <div>
+                <span>228 шт.</span>
+                <span>€1 488,25</span>
+            </div>
+        </div> -->
+
+        <button class="primary-button rounded active">Зареєструвати</button>
+
+    </main>
+    
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="app.js" type="module"></script>
+
+
+</body>
+
+
+</html>
