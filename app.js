@@ -1,6 +1,7 @@
 
 import data from './data.json' assert { type: 'json' }; 
 import PopupMessage from './popup-message.js';
+import API from './api.js';
 
 
 const Labels = {
@@ -46,6 +47,9 @@ function initialize() {
     createCards(cards, data);
     
     trackingInputChanges();
+
+    API.send("PRODUCTION_TASKS", 'GET', [{ 0: "world" }]);
+
 
 }
 
