@@ -9,6 +9,8 @@ class API {
         this.responseType = "json";
         this.currentRoute = "";
         this.errorCode = 0;
+    
+        this.response = null;
     }
 
     send(routeCode, method, params = null) 
@@ -58,8 +60,8 @@ class API {
         if(this.instance.readyState == RequestStatus.READY &&
             this.instance.status == RequestStatus.SUCCESS) {
             
-                // TO DO: !!!!!!!!!!!!!!!!
-            console.log(this.instance.response);
+            this.response = this.instance.response;
+            
         }
         else 
         {

@@ -1,5 +1,7 @@
 
-import data from './data.json' assert { type: 'json' }; 
+const { default: data } = 
+    await import("/data.json", { assert: { type: "json" } });
+
 import PopupMessage from './popup-message.js';
 import API from './api.js';
 
@@ -18,7 +20,13 @@ window.addEventListener("load", initialize());
 
 
 function initialize() {
+
+    //const data = API.send("PRODUCTION_TASKS", 'GET');
+
+    console.log(API.response)
     
+
+
     const title = document.getElementById('title');
     const projectName = document.getElementById('project-name');
     const projectTerms = document.getElementById('project-terms');
@@ -47,10 +55,6 @@ function initialize() {
     createCards(cards, data);
     
     trackingInputChanges();
-
-    API.send("PRODUCTION_TASKS", 'GET', [{ 0: "world" }]);
-
-
 }
 
 function createCards(container, data) {
@@ -79,7 +83,7 @@ function createCards(container, data) {
                 <input type="number" class="transparent" 
                     placeholder="${ data.unit }" name="unit-count" disabled />
                 <i class='error-icon'>
-                    <img src='../icons/danger.svg' />
+                    <img src='icons/danger.svg' />
                 </i>
             </div>
     
