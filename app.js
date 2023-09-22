@@ -65,6 +65,10 @@ function initialize() {
     
         window.Telegram.WebApp.MainButton.show();
 
+        window.Telegram.WebApp.MainButton.onClick(result => {
+            alert(result);
+        });
+
         window.Telegram.WebApp.MainButton.onclick = 
             sendButton.onclick = function() {
 
