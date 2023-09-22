@@ -35,7 +35,7 @@ class API {
         // console.log(request);
     }
 
-    async send(routeCode, body, params) 
+    async send(routeCode, body, searchParams) 
     {
         const route = Routes.get(routeCode);
 
@@ -53,20 +53,20 @@ class API {
 
         // cryptoId check validation method, to do!
         
-        let request = new Request(route.url.href, {
+        let url = route.url.href + 
+            (searchParams !== undefined ? "?" + new URLSearchParams(searchParams) : "");
+
+        let request = new Request(url, {
             method: route.method,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST,GET,PATCH,OPTIONS'
             },
-            params: params,
             body: body,
         });
 
         return await this.#awaitResponse(request);
-
-
     }
 
     #getCryptoId() {

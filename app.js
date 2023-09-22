@@ -1,5 +1,6 @@
 import PopupMessage from './popup-message.js';
 import API from './api.js';
+import Theme from './theme.js';
 
 
 const Labels = {
@@ -18,6 +19,11 @@ document.getElementById("error_frame_close").onclick
     = () => closeConnectionError();
 
 function initialize() {
+
+    // testing
+        Theme.init();
+
+    //
 
     API.send("GET_PRODUCTION_TASKS").then(response => {
 
@@ -73,25 +79,8 @@ function initialize() {
 
         window.Telegram.WebApp.MainButton.onClick(function() {
             
-            if(isNaN(parseFloat(factCount.value))) 
-            {
-
-                window.scrollTo({
-                    top: 0,
-                    left: 0,
-                    behavior: "smooth",
-                });
-
-                // Певний костиль, бо попап зникає при скроллі, 
-                // тож очікуємо на завершення скролу і виводимо
-                setTimeout(function() {
-                    factCount.focus();
-                    PopupMessage.Show("Введіть значення!", factCount.parentElement);
-                }, 700);
-
-                factCount.classList.add("error");
+            if(!factCountValid())
                 return;
-            }
 
             let json = getJsonData(response);
 
@@ -105,12 +94,24 @@ function initialize() {
 
         });
 
-        // window.Telegram.WebApp.MainButton.onclick = 
-        //     sendButton.onclick = function() {
+        sendButton.onclick = function() {
 
+            if(!factCountValid())
+                return;
+
+            let json = getJsonData(response);
+
+            sendJsonData(json).then(result => {
                 
-                    
-        //     }
+                if(!result) {
+                    showConnectionError();
+                    return;
+                }
+
+                console.log(result);
+
+            });    
+        }
     
         createCards(cards, response.data.data);
         
@@ -144,6 +145,34 @@ function closeConnectionError() {
     document.getElementById("error_frame").classList.remove("show");
     document.body.style.overflow = "scroll";
 }
+
+function factCountValid() {
+
+    let factCount = document.getElementById("fact-count");
+
+    if(isNaN(parseFloat(factCount.value))) 
+    {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+        });
+
+        // Певний костиль, бо попап зникає при скроллі, 
+        // тож очікуємо на завершення скролу і виводимо
+        setTimeout(function() {
+            factCount.focus();
+            PopupMessage.Show("Введіть значення!", factCount.parentElement);
+        }, 600);
+
+        factCount.classList.add("error");
+
+        return false;
+    }
+
+    return true;
+}
+
 
 
 function getJsonData(response) {
@@ -185,7 +214,9 @@ function getJsonData(response) {
 }
 
 async function sendJsonData(json) {
-    return await API.send("POST_PRODUCTION_TASKS", JSON.stringify(json))
+    return await API.send("POST_PRODUCTION_TASKS", JSON.stringify(json), {
+        cryptoId: getCryptoId()
+    })
         .then(result => {
             
             if(result === undefined || result === null)
