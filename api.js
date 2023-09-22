@@ -1,7 +1,100 @@
 import Routes from "./routes.js";
-import RequestStatus from "./statuses.js";
+//import Request from "./Request.js";
 
 class API {
+
+    test() {
+
+        fetch('/').then((response) => {
+            console.log(response.statusText);
+        })
+
+        // var request = new Request("asd", "POST");
+
+        // let arrayBody = [
+        //     { Person: "Maria", Age: 12 },
+        //     { Person: "Sasha", Age: 14, 
+        //         Grades: [
+        //             { Math:12, Biology:10 }
+        //         ]
+        //     },
+        // ];
+    
+        // let header = { 
+        //     'Content-Type': 'application/json' 
+        // }
+        // let header2 = { 
+        //     'Content-Type': 'application/json',
+        //     'Something': 'better'
+        // }
+
+        // request.setBody(arrayBody);
+        // request.addHeader(header);
+        // request.addHeader(header2);
+
+        // console.log(request);
+    }
+
+    async send(routeCode, body, params) 
+    {
+        const route = Routes.get(routeCode);
+
+        if(route === null || route === undefined || typeof route === 'undefined') {
+            console.error(`API: Route path ${routeCode} was not found! Request hasn't been sent!`);
+            return;
+        }
+
+        const cryptoId = this.#getCryptoId();
+
+        if(cryptoId === null || cryptoId === undefined || !cryptoId.length) {
+            console.error("API: Token (cryptoId) not found in URL. Request hasn't been sent!");
+            return;
+        }
+
+        // cryptoId check validation method, to do!
+        
+        let request = new Request(route.url.href, {
+            method: route.method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'POST,GET,PATCH,OPTIONS'
+            },
+            params: params,
+            body: body,
+        });
+
+        return await this.#awaitResponse(request);
+
+
+    }
+
+    #getCryptoId() {
+        return new URLSearchParams(window.location.search).get("cryptoId");
+    }
+
+    async #awaitResponse(request) {
+        return await fetch(request)
+            .then(response => {
+                if(response.ok) {
+                    return response.json();
+                } 
+                else {
+                    throw new Error(`Request to ${request.url} return failed status! Check details...`);
+                }
+            })
+            .then(json => {
+                return json;
+            })
+            .catch(e => {
+                console.error(`API.FETCH: ${e}`)
+            });
+    }
+
+
+}
+
+/*class API {
 
     constructor() 
     {
@@ -73,6 +166,6 @@ class API {
         return new URLSearchParams(window.location.search).get("cryptoId");
     }
 
-}
+}*/
 
 export default new API;

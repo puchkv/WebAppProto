@@ -1,6 +1,6 @@
 
-const { default: data } = 
-    await import("/data.json", { assert: { type: "json" } });
+// const { default: data } = 
+//     await import("/data.json", { assert: { type: "json" } });
 
 import PopupMessage from './popup-message.js';
 import API from './api.js';
@@ -18,44 +18,184 @@ const changedCards = new Array();
 // Start point
 window.addEventListener("load", initialize());
 
+document.getElementById("error_frame_close").onclick = () => closeConnectionError();
 
 function initialize() {
 
-    //const data = API.send("PRODUCTION_TASKS", 'GET');
+    API.send("GET_PRODUCTION_TASKS").then(response => {
 
-    console.log(API.response)
+        if(response === undefined || response === null) {
+            showEmptyFrame();
+            throw new Error(`API.SEND: Response data is undefined or empty!`);
+        }
+
+        hideEmptyFrame();
+
+        const title = document.getElementById('title');
+        const projectName = document.getElementById('project-name');
+        const projectTerms = document.getElementById('project-terms');
+        const projectExec = document.getElementById('project-exec');
+        const cards = document.getElementById('cards');
+        const factCount = document.getElementById('fact-count');
+
+        const sendButton = document.getElementById('send-button');
     
+        // Назва роботи/проєкту
+        title.append(response.data.data.stage_work);
+
+        // Поточна стадія виконання проєкту
+        projectName.append(response.data.data.stage);
+
+        // Терміни по проєкту/дата
+        projectTerms.append(
+            new Date(response.data.data.date)
+                .toLocaleDateString("uk", {timeZone: "UTC"}));
+        
+        // План/факт виконання
+        projectExec.append(
+            `${response.data.data.plan_amount}/${response.data.data.fact_amount} 
+            (${Math.round(response.data.data.fact_amount/response.data.data.plan_amount)}%)`);
+    
+        // Загальна кількість виконаних робіт, од. виміру
+        factCount.placeholder = `Загальна кількість, всього ${response.data.data.unit}`;
+    
+        factCount.addEventListener("change", () => updateCards());
+    
+        factCount.addEventListener("input", () => {
+            factCount.classList.remove('error');
+            PopupMessage.Hide();
+        });
+    
+        window.Telegram.WebApp.MainButton.show();
+
+        window.Telegram.WebApp.MainButton.onclick = 
+            sendButton.onclick = function() {
+
+                if(isNaN(parseFloat(factCount.value))) 
+                {
+
+                    window.scrollTo({
+                        top: 0,
+                        left: 0,
+                        behavior: "smooth",
+                    });
+
+                    // Певний костиль, бо попап зникає при скроллі, 
+                    // тож очікуємо на завершення скролу і виводимо
+                    setTimeout(function() {
+                        factCount.focus();
+                        PopupMessage.Show("Введіть значення!", factCount.parentElement);
+                    }, 700);
+
+                    factCount.classList.add("error");
+                    return;
+                }
+
+                let json = getJsonData(response);
+
+                sendJsonData(json).then(result => {
+                    
+                    if(!result) {
+                        showConnectionError();
+                    }
+
+                });
+                    
+            }
+    
+        createCards(cards, response.data.data);
+        
+        trackingInputChanges();
+
+    })
+    .catch(exception => {
+
+        console.error(`Response cannot received: ${exception.message}`);
+
+    })
+}
 
 
-    const title = document.getElementById('title');
-    const projectName = document.getElementById('project-name');
-    const projectTerms = document.getElementById('project-terms');
-    const projectExec = document.getElementById('project-exec');
-    const cards = document.getElementById('cards');
-    const factCount = document.getElementById('fact-count');
+function showEmptyFrame() {
+    document.getElementById("main_frame").style.display = "none";
+    document.getElementById("empty_frame").style.display = "";
+}
 
-    title.append(data.stage_work);
-    projectName.append(data.stage);
-    projectTerms.append(new Date(data.date).toLocaleDateString("uk-UK"));
-    projectExec.append(
-        `${data.plan_amount}/${data.fact_amount} 
-        (${Math.round(data.fact_amount/data.plan_amount)}%)`);
+function hideEmptyFrame() {
+    document.getElementById("main_frame").style.display = "";
+    document.getElementById("empty_frame").style.display = "none";
+}
 
-    factCount.placeholder = `Загальна кількість, всього ${data.unit}`;
+function showConnectionError() {
+    document.getElementById("error_frame").style.display = "";
+    document.body.style.overflow = "hidden";
+}
 
-    factCount.addEventListener("change", () => updateCards());
+function closeConnectionError() {
+    document.getElementById("error_frame").style.display = "none";
+    document.body.style.overflow = "scroll";
+}
 
-    factCount.addEventListener("input", () => {
-        factCount.classList.remove('error');
-        PopupMessage.Hide();
+
+function getJsonData(response) {
+
+    const json = {
+        id: response.data.cryptoId,
+        data: {
+            userid: null,
+            stage_code: response.data.data.stage_code,
+            stage_work_code: response.data.data.stage_work_code,
+            amount: document.getElementById('fact-count').value,
+            persons_list: []
+        }
+    };
+
+    let cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+
+        let factCountField = card.querySelector('input[name="unit-count"]');
+
+        let factCountValue = parseFloat(factCountField.value);
+
+        if(isNaN(factCountValue)) {
+            factCountValue = 0;
+        }
+
+        let employee = response.data.data.persons_list.find(
+            person => person.tabnum === card.dataset.id);
+
+        json.data.persons_list.push({
+            absent: employee.absent,
+            tabnum: employee.tabnum,
+            fact: factCountValue
+        });
     });
 
-    //window.Telegram.WebApp.MainButton.show();
-
-    createCards(cards, data);
-    
-    trackingInputChanges();
+    return json;
 }
+
+async function sendJsonData(json) {
+    return await API.send("POST_PRODUCTION_TASKS", JSON.stringify(json))
+        .then(result => {
+            
+            if(result === undefined || result === null)
+                return false;
+
+            return true;
+        })
+        .catch(exception => {
+            console.error(`POST request cannot sended: ${exception.message}`);
+            return false;
+        })
+        .finally(() => { return false } );
+}
+
+function getCryptoId() {
+    return new URLSearchParams(window.location.search).get("cryptoId");
+}
+
+
 
 function createCards(container, data) {
 

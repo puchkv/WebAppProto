@@ -71,6 +71,7 @@ class PopupMessage {
             this.Element.style.padding = this.Properties.Padding;
             this.Element.style.borderRadius = this.Properties.Radius;
             this.Element.style.border = this.Properties.Border;
+            this.Element.style.zIndex = 999;
             
             this.Element.innerHTML = this.Properties.Text;
 

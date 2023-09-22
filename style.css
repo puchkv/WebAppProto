@@ -12,11 +12,12 @@
     --bg-color: #F3F2F8;
     --surface-color: #FFFFFF;
     --primary-color: rgba(52, 120, 246, 1);
-    --active-color: rgba(206,223,253,255);
+    --active-color: rgb(41, 92, 185);
     --text-color: #888;
     --title-color: #000;
     --placeholder-color: #C5C5C7;
     --input-label-color: #707073;    
+    --error-color: #FF3B30;
 
     --base-text-size: 15px;
 
@@ -58,7 +59,7 @@ body {
     font-family: var(--default-font);
 }
 
-main {
+main, section {
     /*width: var(--default-width);*/
     display: flex;
     gap: 10px;
@@ -351,6 +352,82 @@ button {
     border-width: 10px 10px 0 0;
     border-color: #ff0122 transparent transparent transparent;
     transform: rotate(45deg);
+}
+
+
+#empty_frame {
+    display: flex;
+    height: 100vh;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+#empty_frame > h1 {
+    font-weight: bolder;
+    font-size: xx-large;
+}
+
+#empty_frame > span {
+    font-size: 14px;
+    width: 80%;
+    text-align: center;
+    color: var(--text-color);
+}
+
+#error_frame {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    background: rgba(0,0,0,0.3);
+    position: fixed;
+    backdrop-filter: blur(6px);
+}
+
+.message-box {
+    display: flex;
+    width: 80%;
+    background: white;
+    align-items: center;
+    flex-direction: column;
+    padding: var(--default-padding);
+    border-radius: var(--default-border-radius);
+    gap: 12px;
+}
+
+.message-box > img {
+    width: 50px;
+    height: 50px;
+}
+
+.message-box > .title {
+    font-weight: bold;
+    font-size: var(--title-text-size);
+    text-align: center;
+}
+
+.message-box > .details {
+    font-size: 12px;
+    text-align: center;
+    color: var(--text-color);
+    width: 70%;
+}
+
+.message-box > button {
+    border-radius: var(--default-border-radius);
+    background: var(--error-color);
+    color: white;
+    font-weight: bold;
+    margin-top: 12px;
+    width: 60%;
+}
+
+.message-box > button:active {
+    background-color: #ff2911;
 }
 
 

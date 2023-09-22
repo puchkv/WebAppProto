@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <main>
+    <main id = "main_frame" style="display:none">
         
         <h1 class="header-title" id="title">
             <!-- Сюди завантажується заголовок -->
@@ -70,7 +70,7 @@
         <div class="rounded">
             <!-- Тут вставляємо кількість і одиницю виміру -->
             <input class="input-row rounded outlined" type="number" name="count"
-                placeholder="" id="fact-count"> 
+                placeholder="" id="fact-count" required /> 
         </div>
 
         <div class="cards" id="cards">
@@ -85,9 +85,35 @@
             </div>
         </div> -->
 
-        <button class="primary-button rounded active">Зареєструвати</button>
+        <button id="send-button" class="primary-button rounded active">Зареєструвати</button>
 
     </main>
+
+    <section id = "empty_frame" style="display:none">
+
+        <h1>Отакої 😱</h1>
+        <div style="display: flex;flex-direction: column;width: 70%;align-items:center;">
+            <img src="/icons/no-data.svg" alt="no-data" />
+            <p style="text-align:center;">Не вдалось отримати дані від сервера або відсутній доступ</p>
+        </div>
+
+        <span>Зв'яжіться з адміністратором або створіть заявку через бот</span>
+    </section>
+
+
+    <section id="error_frame" style="display:none">
+        <div class="overlay"></div>
+        <div class="message-box">
+            <img src="icons/danger.svg" alt="an_error_has_occurred" />
+            <p class = "title">Не вдалось надіслати дані!</p>
+            <span class = "details">Немає з'єднання з сервером або відсутній доступ.
+                Повторіть спробу пізніше або зверніться до адміністратора
+            </span>
+            <button id="error_frame_close">Зрозуміло</button>
+        </div>
+
+
+    </section>
     
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
