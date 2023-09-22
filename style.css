@@ -18,6 +18,7 @@
     --placeholder-color: #C5C5C7;
     --input-label-color: #707073;    
     --error-color: #FF3B30;
+    --input-color: #fff;
 
     --base-text-size: 15px;
 
@@ -53,17 +54,16 @@ html, body, main {
 
 body {
     position: relative;
-    background-color: #e0e0e0;
+    background-color: var(--tg-theme-bg-color, var(--bg-color, #F3F2F8));
+    color: var(--tg-theme-text-color, var(--text-color, #888));
     display: flex;
     justify-content: center;
     font-family: var(--default-font);
 }
 
 main, section {
-    /*width: var(--default-width);*/
     display: flex;
     gap: 10px;
-    background: var(--tg-theme-bg-color);
     padding: var(--default-padding);
     flex-direction: column;
 }
@@ -83,6 +83,7 @@ input {
     outline: none;
     font-family: var(--default-font);
     font-size: var(--base-text-size);
+    background: var(--tg-theme-secondary-bg-color, #fff);
 }
 
 input::placeholder {
