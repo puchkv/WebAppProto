@@ -54,7 +54,7 @@ html, body, main {
 
 body {
     position: relative;
-    background-color: var(--tg-theme-bg-color, var(--bg-color, #F3F2F8));
+    background-color: var(--tg-theme-secondary-bg-color, var(--bg-color, #F3F2F8));
     color: var(--tg-theme-text-color, var(--text-color, #888));
     display: flex;
     justify-content: center;
@@ -83,7 +83,7 @@ input {
     outline: none;
     font-family: var(--default-font);
     font-size: var(--base-text-size);
-    background: var(--tg-theme-secondary-bg-color, #fff);
+    background: var(--tg-theme-bg-color, #fff);
 }
 
 input::placeholder {
@@ -108,7 +108,7 @@ input[type=number] {
 
 .header-title {
     font-size: var(--title-text-size);
-    color: var(--title-color);
+    color: var(--tg-theme-text-color, var(--title-color));
     font-weight: var(--title-font-weight);
     text-align: center;
     margin: 0 auto;
@@ -144,7 +144,7 @@ input[type=number] {
     position: relative;
     justify-content: space-between;
     padding: var(--roulette-padding);
-    background: var(--surface-color);
+    background: var(--tg-theme-bg-color, var(--surface-color));
     overflow: hidden;
 }
 
@@ -156,12 +156,12 @@ input[type=number] {
 
 .roulette > .row > .label > p {
     font-size: var(--base-text-size);
-    color: var(--title-color);
+    color: var(--tg-theme-text-color, var(--title-color));
 }
 
 .roulette > .row > .value {
     font-size: var(--base-text-size);
-    color: var(--text-color);
+    color: var(--tg-theme-hint-color, var(--text-color));
 }
 
 .roulette > .row::after {
@@ -179,7 +179,7 @@ input[type=number] {
 
 .volume-label {
     font-size: var(--label-text-size);
-    color: var(--text-color);
+    color: var(--tg-theme-hint-color, var(--text-color));
     margin-top: 12px;
     margin-left: var(--default-padding);
 }
@@ -207,7 +207,7 @@ input[type=number] {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--surface-color);
+    background: var(--tg-theme-bg-color, var(--surface-color));
 }
 
 .cards > .card > .card-header {
@@ -215,7 +215,7 @@ input[type=number] {
     display: flex;
     gap: 12px;
     align-items: center;
-    border-bottom: 1px solid var(--separator-color);
+    border-bottom: 1px solid var(--tg-theme-hint-color, var(--separator-color));
 }
 
 .card-header > .indicator {
@@ -225,7 +225,7 @@ input[type=number] {
     justify-content: center;
     align-items: center;
     font-size: small;
-    background: var(--primary-color);
+    background: var(--tg-theme-link-color, var(--primary-color));
     color: var(--surface-color)
 }
 
@@ -251,11 +251,11 @@ input[type=number] {
     flex-direction: column;
     gap: 4px;
     padding: 8px 16px;
-    background-color: var(--bg-color);
+    background-color: var(--tg-theme-bg-color, var(--bg-color));
 }
 
 .label-input > span {
-    color: var(--input-label-color);
+    color: var(--tg-theme-hint-color, var(--input-label-color));
     font-size: var(--label-input-text-size);
 }
 
