@@ -167,7 +167,7 @@ input[type=number] {
 .roulette > .row::after {
     content: "";
     position: absolute;
-    border-bottom: 1px solid var(--separator-color);
+    border-bottom: 1px solid var(--tg-theme-hint-color, var(--separator-color));
     bottom: 0;
     height: 1px;
     width: 100%;
@@ -280,6 +280,7 @@ input[type=number] {
 .label-input > input {
     font-size: 14px;
     font-weight: bold;
+    color: var(--tg-theme-text-color, var(--text-color, #000));
 }
 
 .label-input:focus-within {
