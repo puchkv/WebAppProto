@@ -385,7 +385,14 @@ button {
     background: none;
     background: rgba(0,0,0,0.3);
     position: fixed;
-    backdrop-filter: blur(6px);
+    visibility: hidden;
+    backdrop-filter: blur(6px) opacity(0);
+    transition: backdrop-filter 0.2s;
+}
+
+#error_frame.show {
+    visibility: visible;
+    backdrop-filter: blur(6px) opacity(1);
 }
 
 .message-box {

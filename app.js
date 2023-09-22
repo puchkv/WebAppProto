@@ -1,7 +1,3 @@
-
-// const { default: data } = 
-//     await import("/data.json", { assert: { type: "json" } });
-
 import PopupMessage from './popup-message.js';
 import API from './api.js';
 
@@ -18,7 +14,8 @@ const changedCards = new Array();
 // Start point
 window.addEventListener("load", initialize());
 
-document.getElementById("error_frame_close").onclick = () => closeConnectionError();
+document.getElementById("error_frame_close").onclick 
+    = () => closeConnectionError();
 
 function initialize() {
 
@@ -127,12 +124,12 @@ function hideEmptyFrame() {
 }
 
 function showConnectionError() {
-    document.getElementById("error_frame").style.display = "";
+    document.getElementById("error_frame").classList.add("show");
     document.body.style.overflow = "hidden";
 }
 
 function closeConnectionError() {
-    document.getElementById("error_frame").style.display = "none";
+    document.getElementById("error_frame").classList.remove("show");
     document.body.style.overflow = "scroll";
 }
 
