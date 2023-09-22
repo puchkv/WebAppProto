@@ -30,13 +30,13 @@ class Theme {
             return;
         }
 
-        if(this.colors.bg_color !== undefined) {
-            document.querySelector("body").style.background = this.colors.bg_color;
-        }
+        // if(this.colors.bg_color !== undefined) {
+        //     document.querySelector("body").style.background = this.colors.bg_color;
+        // }
 
-        if(this.colors.text_color !== undefined) {
-            document.querySelector("body").style.color = this.colors.text_color;
-        }
+        // if(this.colors.text_color !== undefined) {
+        //     document.querySelector("body").style.color = this.colors.text_color;
+        // }
 
         
 
