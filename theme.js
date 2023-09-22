@@ -21,7 +21,7 @@ class Theme {
         });
 
 
-        alert(window.Telegram.WebApp.themeParams);
+        alert(JSON.stringify(window.Telegram.WebApp.themeParams));
 
     }
 
