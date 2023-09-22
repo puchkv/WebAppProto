@@ -62,47 +62,55 @@ function initialize() {
             factCount.classList.remove('error');
             PopupMessage.Hide();
         });
-    
-        window.Telegram.WebApp.MainButton.show();
 
-        window.Telegram.WebApp.MainButton.onClick(result => {
-            alert(result);
+        window.Telegram.WebApp.MainButton.setParams({
+            text: "Зареєструвати",
+            color: "#000000",
+            text_color: "#ffffff",
         });
 
-        window.Telegram.WebApp.MainButton.onclick = 
-            sendButton.onclick = function() {
+        window.Telegram.WebApp.MainButton.show();
 
-                if(isNaN(parseFloat(factCount.value))) 
-                {
+        window.Telegram.WebApp.MainButton.onClick(function() {
+            
+            if(isNaN(parseFloat(factCount.value))) 
+            {
 
-                    window.scrollTo({
-                        top: 0,
-                        left: 0,
-                        behavior: "smooth",
-                    });
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: "smooth",
+                });
 
-                    // Певний костиль, бо попап зникає при скроллі, 
-                    // тож очікуємо на завершення скролу і виводимо
-                    setTimeout(function() {
-                        factCount.focus();
-                        PopupMessage.Show("Введіть значення!", factCount.parentElement);
-                    }, 700);
+                // Певний костиль, бо попап зникає при скроллі, 
+                // тож очікуємо на завершення скролу і виводимо
+                setTimeout(function() {
+                    factCount.focus();
+                    PopupMessage.Show("Введіть значення!", factCount.parentElement);
+                }, 700);
 
-                    factCount.classList.add("error");
-                    return;
+                factCount.classList.add("error");
+                return;
+            }
+
+            let json = getJsonData(response);
+
+            sendJsonData(json).then(result => {
+                
+                if(!result) {
+                    showConnectionError();
                 }
 
-                let json = getJsonData(response);
+            });
 
-                sendJsonData(json).then(result => {
-                    
-                    if(!result) {
-                        showConnectionError();
-                    }
+        });
 
-                });
+        // window.Telegram.WebApp.MainButton.onclick = 
+        //     sendButton.onclick = function() {
+
+                
                     
-            }
+        //     }
     
         createCards(cards, response.data.data);
         
