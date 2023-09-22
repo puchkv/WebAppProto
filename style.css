@@ -53,7 +53,7 @@ html, body, main {
 
 body {
     position: relative;
-    background-color: #2f2f2f;
+    background-color: #e0e0e0;
     display: flex;
     justify-content: center;
     font-family: var(--default-font);
@@ -63,7 +63,7 @@ main, section {
     /*width: var(--default-width);*/
     display: flex;
     gap: 10px;
-    background: var(--bg-color);
+    background: var(--tg-theme-bg-color);
     padding: var(--default-padding);
     flex-direction: column;
 }

@@ -4,7 +4,7 @@
 class Theme {
 
     constructor() {
-        //this.primary_color = window.Telegra
+        const colors = window.Telegram.WebApp.themeParams;
     }
 
     init() {
@@ -20,14 +20,27 @@ class Theme {
             
         });
 
-
-        alert(JSON.stringify(window.Telegram.WebApp.themeParams));
-
+        this.#apply();
     }
 
-    
 
+    #apply() {
 
+        if(this.colors === undefined) {
+            return;
+        }
+
+        if(this.colors.bg_color !== undefined) {
+            document.querySelector("body").style.background = this.colors.bg_color;
+        }
+
+        if(this.colors.text_color !== undefined) {
+            document.querySelector("body").style.color = this.colors.text_color;
+        }
+
+        
+
+    }
 
 }
 
