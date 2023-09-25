@@ -20,10 +20,8 @@ document.getElementById("error_frame_close").onclick
 
 function initialize() {
 
-    // testing
-        Theme.init();
-
-    //
+    // For now just changing icons color to primary Telegram color    
+    Theme.init();
 
     API.send("GET_PRODUCTION_TASKS").then(response => {
 
@@ -41,7 +39,7 @@ function initialize() {
         const cards = document.getElementById('cards');
         const factCount = document.getElementById('fact-count');
 
-        const sendButton = document.getElementById('send-button');
+        //const sendButton = document.getElementById('send-button');
     
         // Назва роботи/проєкту
         title.append(response.data.data.stage_work);
@@ -99,7 +97,6 @@ function initialize() {
                     text: "Закрити"
                 });
 
-                
                 showSuccessFrame();
 
             });
@@ -163,9 +160,9 @@ function showSuccessFrame() {
     document.getElementById("main_frame").style.display = "none";
     document.getElementById("success_frame").style.display = "";
 
-    window.Telegram.WebApp.MainButton.onClick(function() {
-        webviewClose();
-    });
+    window.Telegram.WebApp.MainButton.onClick(
+        window.Telegram.WebApp.BackButton.onClick()
+    );
 }
 
 
