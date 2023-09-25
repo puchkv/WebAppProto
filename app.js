@@ -160,8 +160,7 @@ function showSuccessFrame() {
     document.getElementById("main_frame").style.display = "none";
     document.getElementById("success_frame").style.display = "";
 
-    window.Telegram.WebApp.MainButton.onClick(
-        () => window.Telegram.WebApp.BackButton.onClick());
+    window.Telegram.WebApp.MainButton.hide();
 }
 
 
@@ -388,9 +387,13 @@ function trackingInputChanges() {
 
         input.onblur = () => {
             input.value = parseFloat(input.value);
+
+            window.Telegram.WebApp.MainButton.show();
         }
 
         input.onkeydown = (event) => {
+
+            window.Telegram.WebApp.MainButton.hide();
 
             if(event.key === '+' || event.key === '-') {
                 PopupMessage.Show("Використання символів заборонено", input.parentElement);
