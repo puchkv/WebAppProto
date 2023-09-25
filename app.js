@@ -161,8 +161,7 @@ function showSuccessFrame() {
     document.getElementById("success_frame").style.display = "";
 
     window.Telegram.WebApp.MainButton.onClick(
-        window.Telegram.WebApp.BackButton.onClick()
-    );
+        () => window.Telegram.WebApp.BackButton.onClick());
 }
 
 
