@@ -386,9 +386,7 @@ function trackingInputChanges() {
     inputs.forEach(input => {
 
         input.onblur = () => {
-            if(!isNaN(input.value) && input.value !== '')
-                input.value = parseFloat(input.value);
-
+            input.value = isNaN(input.value) ? 0 : parseFloat(input.value);
             window.Telegram.WebApp.MainButton.show();
         }
 
