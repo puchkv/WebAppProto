@@ -387,16 +387,13 @@ function trackingInputChanges() {
 
         input.onblur = () => {
             input.value = parseFloat(input.value);
-
             window.Telegram.WebApp.MainButton.show();
         }
 
         input.onkeydown = (event) => {
 
-            window.Telegram.WebApp.MainButton.hide();
-
-            //if(event.key === '+' || event.key === '-') {
             // Allow to input only numeric value
+            //if(event.key === '+' || event.key === '-') {
             if(((event.code < 48) && (event.code > 57)) || (event.code == 13) 
              || (event.key === '+' || event.key === '-')) {
                 PopupMessage.Show("Використання символів заборонено", input.parentElement);
@@ -438,6 +435,9 @@ function trackingInputChanges() {
     });
 
 
+    window.addEventListener("input", function(e) {
+        window.Telegram.WebApp.MainButton.hide();
+    });
 
 }
 
