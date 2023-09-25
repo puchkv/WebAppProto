@@ -6,6 +6,9 @@
     --default-width: 414px; /* iphone xs max, xr */
     --default-height: 896px;
 
+    --icon-width: 18px;
+    --icon-height: 18px;
+
     --default-padding: 16px;
     --input-padding: 14px;
 
@@ -21,18 +24,12 @@
     --input-color: #fff;
 
     --base-text-size: 15px;
-
     --label-text-size: 15px;
-
     --title-text-size: 18px;
     --title-font-weight: 600;
-
     --input-text-size: 15px;
     --label-input-text-size: 12px;
     --input-focus-outline: rgba(217, 214, 233, 1);
-
-    --icon-size: 18px;
-    --icon-gap: 10px;
 
     --default-border-radius: 10px;
     --small-border-radius: 6px;
@@ -84,6 +81,7 @@ input {
     font-family: var(--default-font);
     font-size: var(--base-text-size);
     background: var(--tg-theme-bg-color, #fff);
+    color: var(--tg-theme-text-color, var(--text-color, #000));
 }
 
 input::placeholder {
@@ -119,8 +117,14 @@ input[type=number] {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--default-icon-size);
-    height: var(--default-icon-size);
+    width: var(--icon-width);
+    height: var(--icon-height);
+    margin-right: 8px;
+}
+
+.icon-container > object {
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -231,6 +235,7 @@ input[type=number] {
 
 .card-header > .title {
     font-size: 17px;
+    color: var(--tg-theme-text-color, var(--title-color));
 }
 
 .cards > .card > .card-body {
