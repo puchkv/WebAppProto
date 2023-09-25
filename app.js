@@ -93,11 +93,9 @@ function initialize() {
                     return;
                 }
 
-                window.Telegram.WebApp.MainButton.setParams({
-                    text: "Закрити"
-                });
+                window.Telegram.WebApp.close();
 
-                showSuccessFrame();
+                //showSuccessFrame();
 
             });
 
@@ -160,7 +158,8 @@ function showSuccessFrame() {
     document.getElementById("main_frame").style.display = "none";
     document.getElementById("success_frame").style.display = "";
 
-    window.Telegram.WebApp.MainButton.hide();
+    
+    //window.Telegram.WebApp.MainButton.hide();
 }
 
 
@@ -325,7 +324,7 @@ function explodeCount() {
 
                 let value = Number(workingHours * rate).toFixed(2);
 
-                unitInput.value = value == 0 ? '' : value;
+                unitInput.value = value == 0 ? 0 : value;
 
             }
         }
@@ -346,10 +345,10 @@ function trackingInputChanges() {
 
         input.addEventListener("input", function(event) {
             
-            // if(input.value.startsWith('0')) {
-            //     input.value = 0;
-            //     event.preventDefault();
-            // }
+            if(input.value.startsWith('0')) {
+                input.value = 0;
+                event.preventDefault();
+            }
 
             if(!changedCards.includes(card.dataset.id)) {
                 changedCards.push(card.dataset.id);
@@ -372,9 +371,8 @@ function trackingInputChanges() {
             }
         })
 
-        input.addEventListener("change", function() {
+        input.addEventListener("blur", function() {
             input.value = parseFloat(input.value);
-            explodeCount();
         });
 
 
@@ -385,9 +383,12 @@ function trackingInputChanges() {
 
     inputs.forEach(input => {
 
-        input.onblur = () => {
+        input.onchange = input.onblur = () => {
             input.value = isNaN(input.value) ? 0 : parseFloat(input.value);
             window.Telegram.WebApp.MainButton.show();
+
+            explodeCount();
+
         }
 
         input.onfocus = () => {
@@ -483,10 +484,7 @@ function getAvailableAmount()
         let element = document.querySelector(`[data-id='${card}']`);
         let value = parseFloat(element.querySelector("input[name='unit-count']").value);
 
-        if(!isNaN(value)) {
-            availableAmount -= value;
-        }
-
+        availableAmount -= isNaN(value) ? 0 : value;
     });
 
     return availableAmount;
