@@ -444,6 +444,27 @@ button {
     background-color: #ff2911;
 }
 
+#success_frame {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#success_frame > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    font-weight: bolder;
+}
+
+#success_frame > div > object {
+    width: 40%;
+}
+
 
 /*.popup-message {
     position: absolute;

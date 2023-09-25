@@ -41,7 +41,7 @@ function initialize() {
         const cards = document.getElementById('cards');
         const factCount = document.getElementById('fact-count');
 
-        //const sendButton = document.getElementById('send-button');
+        const sendButton = document.getElementById('send-button');
     
         // Назва роботи/проєкту
         title.append(response.data.data.stage_work);
@@ -92,7 +92,15 @@ function initialize() {
                 
                 if(!result) {
                     showConnectionError();
+                    return;
                 }
+
+                window.Telegram.WebApp.MainButton.setParams({
+                    text: "Закрити"
+                });
+
+                
+                showSuccessFrame();
 
             });
 
@@ -123,11 +131,12 @@ function initialize() {
 
     })
     .catch(exception => {
-
         console.error(`Response cannot received: ${exception.message}`);
-
     })
 }
+
+
+
 
 
 function showEmptyFrame() {
@@ -149,6 +158,16 @@ function closeConnectionError() {
     document.getElementById("error_frame").classList.remove("show");
     document.body.style.overflow = "scroll";
 }
+
+function showSuccessFrame() {
+    document.getElementById("main_frame").style.display = "none";
+    document.getElementById("success_frame").style.display = "";
+
+    window.Telegram.WebApp.MainButton.onClick(function() {
+        webviewClose();
+    });
+}
+
 
 function factCountValid() {
 
@@ -407,6 +426,17 @@ function trackingInputChanges() {
             PopupMessage.Hide();
         });
     });
+
+    // Hide keyboard in Safari when focus out of input area
+    document.addEventListener("touchstart", function(e) {
+        if(document.activeElement !== undefined 
+            && document.activeElement.nodeName === "INPUT") {
+                document.activeElement.blur();
+            }
+    });
+
+
+
 }
 
 
