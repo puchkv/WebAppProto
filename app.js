@@ -386,11 +386,13 @@ function trackingInputChanges() {
     inputs.forEach(input => {
 
         input.onblur = () => {
-            input.value = parseFloat(input.value);
+            if(!isNaN(input.value) && input.value !== '')
+                input.value = parseFloat(input.value);
+
             window.Telegram.WebApp.MainButton.show();
         }
 
-        input.focus = () => {
+        input.onfocus = () => {
             window.Telegram.WebApp.MainButton.hide();
         }
 
