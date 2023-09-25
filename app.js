@@ -41,7 +41,7 @@ function initialize() {
         const cards = document.getElementById('cards');
         const factCount = document.getElementById('fact-count');
 
-        const sendButton = document.getElementById('send-button');
+        //const sendButton = document.getElementById('send-button');
     
         // Назва роботи/проєкту
         title.append(response.data.data.stage_work);
@@ -71,17 +71,21 @@ function initialize() {
 
         window.Telegram.WebApp.MainButton.setParams({
             text: "Зареєструвати",
-            color: "#000000",
+            color: window.Telegram.WebApp.MainButton.color,
             text_color: "#ffffff",
         });
 
         window.Telegram.WebApp.MainButton.show();
 
         window.Telegram.WebApp.MainButton.onClick(function() {
-            
+
             if(!factCountValid())
                 return;
 
+            if(document.activeElement !== undefined)
+                document.activeElement.blur();
+            
+            
             let json = getJsonData(response);
 
             sendJsonData(json).then(result => {
@@ -94,24 +98,24 @@ function initialize() {
 
         });
 
-        sendButton.onclick = function() {
+        // sendButton.onclick = function() {
 
-            if(!factCountValid())
-                return;
+        //     if(!factCountValid())
+        //         return;
 
-            let json = getJsonData(response);
+        //     let json = getJsonData(response);
 
-            sendJsonData(json).then(result => {
+        //     sendJsonData(json).then(result => {
                 
-                if(!result) {
-                    showConnectionError();
-                    return;
-                }
+        //         if(!result) {
+        //             showConnectionError();
+        //             return;
+        //         }
 
-                console.log(result);
+        //         console.log(result);
 
-            });    
-        }
+        //     });    
+        // }
     
         createCards(cards, response.data.data);
         

@@ -256,7 +256,7 @@ input[type=number] {
     flex-direction: column;
     gap: 4px;
     padding: 8px 16px;
-    background-color: var(--tg-theme-bg-color, var(--bg-color));
+    background-color: var(--tg-theme-secondary-bg-color, var(--bg-color, #F3F2F8));
 }
 
 .label-input > span {
@@ -316,8 +316,8 @@ button {
 }
 
 .primary-button {
-    background: var(--primary-color);
-    color: var(--surface-color);
+    background: var(--tg-theme-button-color, var(--primary-color, #000));
+    color: var(--tg-theme-button-text-color, var(--surface-color, #fff));
     font-size: var(--title-text-size);
     font-weight: 500;
 }
