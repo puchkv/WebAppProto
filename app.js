@@ -390,6 +390,10 @@ function trackingInputChanges() {
             window.Telegram.WebApp.MainButton.show();
         }
 
+        input.focus = () => {
+            window.Telegram.WebApp.MainButton.hide();
+        }
+
         input.onkeydown = (event) => {
 
             // Allow to input only numeric value
@@ -432,11 +436,6 @@ function trackingInputChanges() {
             && document.activeElement.nodeName === "INPUT") {
                 document.activeElement.blur();
             }
-    });
-
-
-    window.addEventListener("input", function(e) {
-        window.Telegram.WebApp.MainButton.hide();
     });
 
 }
