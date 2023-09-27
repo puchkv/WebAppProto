@@ -41,7 +41,7 @@ function initialize() {
         const cards = document.getElementById('cards');
         const factCount = document.getElementById('fact-count');
 
-        const sendButton = document.getElementById('send-button');
+        //const sendButton = document.getElementById('send-button');
     
         // Назва роботи/проєкту
         title.append(response.data.data.stage_work);
@@ -102,10 +102,10 @@ function initialize() {
 
         });
 
-        sendButton.onclick = function() {
-            window.Telegram.WebApp.showAlert(
-                JSON.stringify(getJsonData(response)));
-        }
+        // sendButton.onclick = function() {
+        //     window.Telegram.WebApp.showAlert(
+        //         JSON.stringify(getJsonData(response)));
+        // }
 
         // sendButton.onclick = function() {
 
@@ -173,7 +173,7 @@ function factCountValid() {
 
     let factCount = document.getElementById("fact-count");
 
-    if(isNaN(parseFloat(factCount.value))) 
+    if(isNaN(factCount.value) || !isNumber(factCount.value)) 
     {
         window.scrollTo({
             top: 0,
@@ -204,13 +204,13 @@ function getJsonData(response) {
         id: response.data.cryptoId,
         data: {
             type: "construction",
-            userid: null,
             stage_code: response.data.data.stage_code,
             stage_work_code: response.data.data.stage_work_code,
             amount: document.getElementById('fact-count').value,
             persons_list: []
         },
-        initData: window.Telegram.WebApp.initData ?? {}
+        initData: window.Telegram.WebApp.initData ?? {},
+        initDataUnsafe: window.Telegram.WebApp.initDataUnsafe ?? {}
     };
 
     let cards = document.querySelectorAll('.card');
@@ -221,7 +221,7 @@ function getJsonData(response) {
 
         let factCountValue = parseFloat(factCountField.value);
 
-        if(isNaN(factCountValue)) {
+        if(isNaN(factCountValue) || !isNumber(factCountValue)) {
             factCountValue = 0;
         }
 
@@ -260,6 +260,13 @@ function getCryptoId() {
     return new URLSearchParams(window.location.search).get("cryptoId");
 }
 
+function isNumber(value) {
+    if(value === undefined || value === null || value === NaN
+        || value === "")
+        return false;
+    
+    return String(value).match(/^[0-9.,]+$/);
+}
 
 
 function createCards(container, data) {
@@ -295,7 +302,7 @@ function createCards(container, data) {
             <div class="label-input rounded">
                 <span>Кількість в %</span>
                 <input type="text" class="transparent" 
-                    placeholder="%" name="precent-count" disabled />
+                    placeholder="%" name="percent-count" disabled />
             </div>
         </div>`;
     
@@ -319,25 +326,30 @@ function explodeCount() {
         let workingHours = parseFloat(card.querySelector(".indicator").textContent);
 
         // If it is absent or vacation don't calculate
-        if(isNaN(workingHours)) {
+        if(!isNumber(workingHours)) {
             return;
         }
 
-        let precentInput = card.querySelector("input[name='precent-count']");
+        let percentInput = card.querySelector("input[name='percent-count']");
         let unitInput = card.querySelector("input[name='unit-count']");
         
         if(!changedCards.includes(card.dataset.id)) {
 
-            if(!isNaN(unitInput.value)) {
+            let value = parseFloat(workingHours * rate).toFixed(2);
 
-                let value = Number(workingHours * rate).toFixed(2);
+            if(isNumber(value)) 
+            {
 
-                unitInput.value = value == 0 ? 0 : value;
-
+                unitInput.value = value;
+                percentInput.value = `${((value * 100)/ factCount).toFixed(2)} %`;
+            }
+            else 
+            {
+                unitInput.value = "";
+                percentInput.value = "";
             }
         }
     
-        precentInput.value = `${((unitInput.value * 100) / factCount).toFixed(2)} %`;   
 
     });
 }
@@ -352,7 +364,7 @@ function trackingInputChanges() {
         let input = card.querySelector("input[name='unit-count']");
 
         input.addEventListener("input", function(event) {
-            
+
             if(input.value.startsWith('0')) {
                 input.value = 0;
                 event.preventDefault();
@@ -379,9 +391,9 @@ function trackingInputChanges() {
             }
         })
 
-        input.addEventListener("blur", function() {
-            input.value = parseFloat(input.value);
-        });
+        // input.addEventListener("blur", function() {
+        //     input.value = parseFloat(input.value);
+        // });
 
 
     });
@@ -391,8 +403,23 @@ function trackingInputChanges() {
 
     inputs.forEach(input => {
 
+        input.onkeydown = (event) => {
+
+            if(event.key === "Enter" || event.key === "Backspace" 
+            || event.key === "Tab" || event.key === "Escape") {
+                return true; 
+            }
+
+            if(!isNumber(event.key)) {
+                PopupMessage.Show("Використання символів заборонено", input);
+                event.preventDefault();
+            }
+        }
+
         input.onchange = input.onblur = () => {
-            input.value = isNaN(input.value) ? 0 : parseFloat(input.value);
+
+            input.value = isNumber(input.value) ? parseFloat(input.value) : "";
+
             window.Telegram.WebApp.MainButton.show();
 
             explodeCount();
@@ -403,34 +430,33 @@ function trackingInputChanges() {
             window.Telegram.WebApp.MainButton.hide();
         }
 
-        input.onkeydown = (event) => {
+        // input.onkeydown = (event) => {
 
-            // Allow to input only numeric value
-            //if(event.key === '+' || event.key === '-') {
-            if(((event.code < 48) && (event.code > 57)) || (event.code == 13) 
-             || (event.key === '+' || event.key === '-')) {
-                PopupMessage.Show("Використання символів заборонено", input.parentElement);
-                event.preventDefault();
-            }
+        //     // Allow to input only numeric value
+        //     //if(event.key === '+' || event.key === '-') {
+        //     // if(((event.code < 48) && (event.code > 57)) || (event.code == 13) 
+        //     //  || (event.key === '+' || event.key === '-')) {
+        //     //     event.preventDefault();
+        //     // }
             
-            if(event.key === '0') {
+        //     // if(event.key === '0') {
 
-                if(Number(input.value) <= 0) {
-                    event.preventDefault();
-                }
+        //     //     if(Number(input.value) <= 0) {
+        //     //         event.preventDefault();
+        //     //     }
 
-                if(input.id === 'fact-count' && Number(input.value) <= 0) {
+        //     //     if(input.id === 'fact-count' && Number(input.value) <= 0) {
             
-                    PopupMessage.Show("Обсяг не може бути менше 1", input);
+        //     //         PopupMessage.Show("Обсяг не може бути менше 1", input);
                     
-                    input.value = '';
-                    input.classList.add("error");
+        //     //         input.value = '';
+        //     //         input.classList.add("error");
         
-                    event.preventDefault();
-                    return false;
-                }
-            }   
-        }
+        //     //         event.preventDefault();
+        //     //         return false;
+        //     //     }
+        //     // }   
+        // }
 
         input.addEventListener("focusout", function() {
             input.parentElement.classList.remove("error");
@@ -544,7 +570,7 @@ function disableAbsentCards() {
         });
     });
 
-}
+} 
 
 
 
