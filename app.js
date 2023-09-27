@@ -103,6 +103,7 @@ function initialize() {
         });
 
         sendButton.onclick = function() {
+            window.Telegram.WebApp.showAlert(getJsonData(response));
             alert(getJsonData(response));
         }
 
