@@ -103,8 +103,8 @@ function initialize() {
         });
 
         sendButton.onclick = function() {
-            window.Telegram.WebApp.showAlert(getJsonData(response));
-            alert(getJsonData(response));
+            window.Telegram.WebApp.showAlert(
+                JSON.stringify(getJsonData(response)));
         }
 
         // sendButton.onclick = function() {
