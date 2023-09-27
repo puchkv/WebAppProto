@@ -23,7 +23,9 @@ function initialize() {
     // For now just changing icons color to primary Telegram color    
     Theme.init();
 
-    API.send("GET_PRODUCTION_TASKS").then(response => {
+    API.send("GET_PRODUCTION_TASKS", null, {
+        id: getCryptoId()
+    }).then(response => {
 
         if(response === undefined || response === null) {
             showEmptyFrame();
