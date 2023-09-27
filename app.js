@@ -41,7 +41,7 @@ function initialize() {
         const cards = document.getElementById('cards');
         const factCount = document.getElementById('fact-count');
 
-        //const sendButton = document.getElementById('send-button');
+        const sendButton = document.getElementById('send-button');
     
         // Назва роботи/проєкту
         title.append(response.data.data.stage_work);
@@ -85,7 +85,6 @@ function initialize() {
             if(document.activeElement !== undefined)
                 document.activeElement.blur();
             
-            
             let json = getJsonData(response);
 
             sendJsonData(json).then(result => {
@@ -102,6 +101,10 @@ function initialize() {
             });
 
         });
+
+        sendButton.onclick = function() {
+            alert(getJsonData(response));
+        }
 
         // sendButton.onclick = function() {
 
@@ -199,12 +202,14 @@ function getJsonData(response) {
     const json = {
         id: response.data.cryptoId,
         data: {
+            type: "construction",
             userid: null,
             stage_code: response.data.data.stage_code,
             stage_work_code: response.data.data.stage_work_code,
             amount: document.getElementById('fact-count').value,
             persons_list: []
-        }
+        },
+        initData: window.Telegram.WebApp.initData ?? {}
     };
 
     let cards = document.querySelectorAll('.card');
