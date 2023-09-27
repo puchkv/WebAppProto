@@ -102,30 +102,6 @@ function initialize() {
 
         });
 
-        // sendButton.onclick = function() {
-        //     window.Telegram.WebApp.showAlert(
-        //         JSON.stringify(getJsonData(response)));
-        // }
-
-        // sendButton.onclick = function() {
-
-        //     if(!factCountValid())
-        //         return;
-
-        //     let json = getJsonData(response);
-
-        //     sendJsonData(json).then(result => {
-                
-        //         if(!result) {
-        //             showConnectionError();
-        //             return;
-        //         }
-
-        //         console.log(result);
-
-        //     });    
-        // }
-    
         createCards(cards, response.data.data);
         
         trackingInputChanges();
@@ -173,7 +149,7 @@ function factCountValid() {
 
     let factCount = document.getElementById("fact-count");
 
-    if(isNaN(factCount.value) || !isNumber(factCount.value)) 
+    if(!isNumber(factCount.value)) 
     {
         window.scrollTo({
             top: 0,
@@ -221,7 +197,7 @@ function getJsonData(response) {
 
         let factCountValue = parseFloat(factCountField.value);
 
-        if(isNaN(factCountValue) || !isNumber(factCountValue)) {
+        if(!isNumber(factCountValue)) {
             factCountValue = 0;
         }
 
@@ -262,10 +238,10 @@ function getCryptoId() {
 
 function isNumber(value) {
     if(value === undefined || value === null || value === NaN
-        || value === "")
+        || value === "" || value == '')
         return false;
     
-    return String(value).match(/^[0-9.,]+$/);
+    return String(value).match(/^[0-9.,]+$/) ? true : false;
 }
 
 
@@ -316,15 +292,10 @@ function explodeCount() {
     let cards = document.querySelectorAll(".card");
     let factCount = parseFloat(document.getElementById('fact-count').value);
 
-    let availableAmount = getAvailableAmount();
-    let hoursAmount = getWorkingHoursAmount();
-
-    let rate = availableAmount / hoursAmount;
-
     cards.forEach(card => {
 
         let workingHours = parseFloat(card.querySelector(".indicator").textContent);
-
+    
         // If it is absent or vacation don't calculate
         if(!isNumber(workingHours)) {
             return;
@@ -332,24 +303,22 @@ function explodeCount() {
 
         let percentInput = card.querySelector("input[name='percent-count']");
         let unitInput = card.querySelector("input[name='unit-count']");
-        
+
         if(!changedCards.includes(card.dataset.id)) {
 
-            let value = parseFloat(workingHours * rate).toFixed(2);
-
-            if(isNumber(value)) 
-            {
-
-                unitInput.value = value;
-                percentInput.value = `${((value * 100)/ factCount).toFixed(2)} %`;
-            }
-            else 
-            {
-                unitInput.value = "";
-                percentInput.value = "";
-            }
+            let availableAmount = getAvailableAmount();
+            let hoursAmount = getWorkingHoursAmount();
+            
+            let rate = availableAmount / hoursAmount;
+            
+            let value = (parseFloat(workingHours * rate)).toFixed(2)
+            
+            unitInput.value = isNumber(value) ? value : "";
         }
-    
+        
+        percentInput.value = isNumber(unitInput.value) 
+            ? `${((parseFloat(unitInput.value) * 100) / factCount).toFixed(2)} %` 
+            : "";
 
     });
 }
@@ -364,11 +333,6 @@ function trackingInputChanges() {
         let input = card.querySelector("input[name='unit-count']");
 
         input.addEventListener("input", function(event) {
-
-            if(input.value.startsWith('0')) {
-                input.value = 0;
-                event.preventDefault();
-            }
 
             if(!changedCards.includes(card.dataset.id)) {
                 changedCards.push(card.dataset.id);
@@ -416,7 +380,7 @@ function trackingInputChanges() {
             }
         }
 
-        input.onchange = input.onblur = () => {
+        input.onchange = (event) => {
 
             input.value = isNumber(input.value) ? parseFloat(input.value) : "";
 
@@ -427,6 +391,7 @@ function trackingInputChanges() {
         }
 
         input.onfocus = () => {
+            input.oldValue = input.value;
             window.Telegram.WebApp.MainButton.hide();
         }
 
@@ -518,7 +483,8 @@ function getAvailableAmount()
         let element = document.querySelector(`[data-id='${card}']`);
         let value = parseFloat(element.querySelector("input[name='unit-count']").value);
 
-        availableAmount -= isNaN(value) ? 0 : value;
+        availableAmount -= isNumber(value) ? value : 0;
+
     });
 
     return availableAmount;
@@ -542,15 +508,20 @@ function getCardsCurrentAmount() {
 function getWorkingHoursAmount() {
 
     let amount = 0;
-    const hours = document.querySelectorAll('.card-header>.indicator');
 
-    hours.forEach(hour => {
+    const cards = document.querySelectorAll('.card');
 
-        let value = Number(hour.textContent).toFixed(2);
+    cards.forEach(card => {
 
-        if(!isNaN(value)) {
-            amount += parseFloat(value);
+        if(changedCards.includes(card.dataset.id)) {
+            return;
         }
+
+        const cardHours = card.querySelector('.indicator');
+        const hourValue = parseFloat(cardHours.textContent);
+        
+        amount += isNumber(hourValue) ? hourValue : 0;
+
     });
 
     return amount;
