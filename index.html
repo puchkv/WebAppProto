@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, target-densitydpi=device-dpi">
+    <title>Web app proto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main id = "main_frame" style="display:none">
+        
+        <h1 class="header-title" id="title">
+            <!-- Сюди завантажується заголовок -->
+        </h1>
+
+        <div class="roulette rounded" id="project-data">
+            <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <object data="icons/project.svg" type="image/svg+xml"></object>
+                    </span>
+                    <p>Проект</p>
+                </div>
+                <div class="value" id="project-name">
+                    <!-- Сюди завантажується назва проекту -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <object data="icons/cal.svg" type="image/svg+xml"></object>
+                    </span>
+                    <p>Терміни</p>
+                </div>
+                <div class="value" id="project-terms">
+                    <!-- Дата / період / терміни -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <object data="icons/plan.svg" type="image/svg+xml"></object>
+                    </span>
+                    <p>План / Факт</p>
+                </div>
+                <div class="value" id="project-exec">
+                    <!-- Розрахунок план-факту -->
+                </div>
+            </div>
+
+
+            <!-- <div class="row">
+                <div class="label">
+                    <span class="icon-container">
+                        <img src="/icons/currency.svg" alt="currency">
+                    </span>
+                    <p>Розцінка / норма</p>
+                </div>
+                <div class="value">
+                    €2.44 / 0.3 год/шт
+                </div>
+            </div> -->
+        </div>
+
+        <span class="volume-label">Розподіл фактичних обсягів</span>
+
+        <div class="rounded">
+            <!-- Тут вставляємо кількість і одиницю виміру -->
+            <input class="input-row rounded outlined" type="number" name="count"
+                placeholder="" id="fact-count" required /> 
+        </div>
+
+        <div class="cards" id="cards">
+            <!-- Сюди вантажимо картки -->
+        </div>
+
+        <!-- <div class = "summary rounded" id="summary">
+            <span>Всього</span>
+            <div>
+                <span>228 шт.</span>
+                <span>€1 488,25</span>
+            </div>
+        </div> -->
+
+        <!-- <button id="send-button" class="primary-button rounded active">Зареєструвати</button> -->
+
+    </main>
+
+    <section id = "empty_frame" style="display:none">
+
+        <h1>Отакої 😱</h1>
+        <div style="display: flex;flex-direction: column;width: 70%;align-items:center;">
+            <img src="icons/no-data.svg" alt="no-data" />
+            <p style="text-align:center;">Не вдалось отримати дані від сервера або відсутній доступ</p>
+        </div>
+
+        <span>Зв'яжіться з адміністратором або створіть заявку через бот</span>
+    </section>
+
+
+    <section id="error_frame">
+        <div class="overlay"></div>
+        <div class="message-box">
+            <img src="icons/danger.svg" alt="an_error_has_occurred" />
+            <p class = "title">Не вдалось надіслати дані!</p>
+            <span class = "details">Немає з'єднання з сервером або відсутній доступ.
+                Повторіть спробу пізніше або зверніться до адміністратора
+            </span>
+            <button id="error_frame_close">Зрозуміло</button>
+        </div>
+    </section>
+
+    <section id="success_frame" style="display:none">
+        <div class="frame_body">
+            <object data="icons/success.svg" type="image/svg+xml" alt="success"></object>
+            <p>Дані надіслано успішно!</p>
+         </div>
+    </section>
+    
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="app.js" type="module"></script>
+
+
+</body>
+
+
+</html>
