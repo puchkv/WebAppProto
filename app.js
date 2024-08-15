@@ -357,7 +357,7 @@ function createCards(container, data) {
         let card = document.createElement("div");
         card.className = "card rounded";
         card.dataset.id = person.tabnum;
-        card.dataset.absent = person.absent ?? true;
+        card.dataset.absent = person.absent ?? (spreadAmounts.wholeBrigade ? false : true);
 
         card.innerHTML += `
             
