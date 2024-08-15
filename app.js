@@ -23,14 +23,110 @@ function initialize() {
     // For now just changing icons color to primary Telegram color    
     Theme.init();
 
-    API.send("GET_PRODUCTION_TASKS", null, {
+    const response = {
+  "data": {
+    "data": {
+      "stage_work_code": "000010SS1________63030",
+      "stage_work": "Монтаж обладнання, прокладка кабелів, підключення",
+      "stage": "Метеостанции Латвия/Meteoroloģiskās stacijas Latvija",
+      "stage_code": "000010SS1________63020",
+      "date": {
+        "$date": "2024-08-09T21:00:00.000Z"
+      },
+      "unit": "год",
+      "brigade_size": 12,
+      "persons_list": [
+        {
+          "absent": false,
+          "fio": "Aleksejs",
+          "inn": "1",
+          "tabnum": "  17548",
+          "enteredTime": 1
+        },
+        {
+          "fio": "Māris",
+          "inn": "2",
+          "tabnum": "  17547",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Igors",
+          "inn": "3",
+          "tabnum": "  17555",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Arvils",
+          "inn": "4",
+          "tabnum": "  17557",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Vitalii",
+          "inn": "5",
+          "tabnum": "  17615",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Mārtiņš",
+          "inn": "6",
+          "tabnum": "  17550",
+          "enteredTime": 0
+        },
+        {
+          "fio": "DENYS",
+          "inn": "7",
+          "tabnum": "  16599",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Vladyslav",
+          "inn": "8",
+          "tabnum": "  17727",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Eduards",
+          "inn": "9",
+          "tabnum": "  17591",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Oleksandr",
+          "inn": "10",
+          "tabnum": "  17397",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Arvis",
+          "inn": "11",
+          "tabnum": "  17601",
+          "enteredTime": 0
+        },
+        {
+          "fio": "Salvis",
+          "inn": "12",
+          "tabnum": "  17603",
+          "enteredTime": 0
+        }
+      ],
+      "plan_amount": 500,
+      "fact_amount": 204,
+      "spreadAmounts": {
+        "accordingToHours": true,
+        "wholeBrigade": false
+      }
+    }
+  }
+};
+    /*API.send("GET_PRODUCTION_TASKS", null, {
         id: getCryptoId()
     }).then(response => {
 
         if(response === undefined || response === null) {
             showEmptyFrame();
             throw new Error(`API.SEND: Response data is undefined or empty!`);
-        }
+        }*/
 
         hideEmptyFrame();
 
@@ -106,10 +202,10 @@ function initialize() {
         
         trackingInputChanges();
 
-    })
+    /*})
     .catch(exception => {
         console.error(`Response cannot received: ${exception.message}`);
-    })
+    })*/
 }
 
 
