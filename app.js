@@ -12,6 +12,11 @@ const Labels = {
 // Масив для збереження вручу відредагованих карток
 const changedCards = new Array();
 
+const spreadAmounts = {
+    accordingToHours: true,
+    wholeBrigade: false
+};
+
 // Start point
 window.addEventListener("load", initialize());
 
@@ -44,6 +49,7 @@ function initialize() {
           "enteredTime": 1
         },
         {
+          "absent": true,
           "fio": "Māris",
           "inn": "2",
           "tabnum": "  17547",
@@ -127,7 +133,10 @@ function initialize() {
             showEmptyFrame();
             throw new Error(`API.SEND: Response data is undefined or empty!`);
         }*/
-
+        if (response.data?.data?.spreadAmounts?.accordingToHours || response.data?.data?.spreadAmounts?.wholeBrigade) {
+            spreadAmounts.accordingToHours = response.data.data.spreadAmounts.accordingToHours;
+            spreadAmounts.wholeBrigade = response.data.data.spreadAmounts.wholeBrigade;
+        }
         hideEmptyFrame();
 
         const title = document.getElementById('title');
@@ -393,7 +402,7 @@ function explodeCount() {
         let workingHours = parseFloat(card.querySelector(".indicator").textContent);
     
         // If it is absent or vacation don't calculate
-        if(!isNumber(workingHours)) {
+        if(card.dataset.absent || (!isNumber(workingHours) && !spreadAmounts.wholeBrigade)) {
             return;
         }
 
