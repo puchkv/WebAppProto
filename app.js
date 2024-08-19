@@ -28,114 +28,18 @@ function initialize() {
     // For now just changing icons color to primary Telegram color    
     Theme.init();
 
-    const response = {
-  "data": {
-    "data": {
-      "stage_work_code": "000010SS1________63030",
-      "stage_work": "Монтаж обладнання, прокладка кабелів, підключення",
-      "stage": "Метеостанции Латвия/Meteoroloģiskās stacijas Latvija",
-      "stage_code": "000010SS1________63020",
-      "date": {
-        "$date": "2024-08-09T21:00:00.000Z"
-      },
-      "unit": "год",
-      "brigade_size": 12,
-      "persons_list": [
-        {
-          "absent": false,
-          "fio": "Aleksejs",
-          "inn": "1",
-          "tabnum": "  17548",
-          "enteredTime": 1
-        },
-        {
-          "absent": true,
-          "fio": "Māris",
-          "inn": "2",
-          "tabnum": "  17547",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Igors",
-          "inn": "3",
-          "tabnum": "  17555",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Arvils",
-          "inn": "4",
-          "tabnum": "  17557",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Vitalii",
-          "inn": "5",
-          "tabnum": "  17615",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Mārtiņš",
-          "inn": "6",
-          "tabnum": "  17550",
-          "enteredTime": 0
-        },
-        {
-          "fio": "DENYS",
-          "inn": "7",
-          "tabnum": "  16599",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Vladyslav",
-          "inn": "8",
-          "tabnum": "  17727",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Eduards",
-          "inn": "9",
-          "tabnum": "  17591",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Oleksandr",
-          "inn": "10",
-          "tabnum": "  17397",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Arvis",
-          "inn": "11",
-          "tabnum": "  17601",
-          "enteredTime": 0
-        },
-        {
-          "fio": "Salvis",
-          "inn": "12",
-          "tabnum": "  17603",
-          "enteredTime": 0
-        }
-      ],
-      "plan_amount": 500,
-      "fact_amount": 204,
-      "spreadAmounts": {
-        "accordingToHours": true,
-        "wholeBrigade": false
-      }
-    }
-  }
-};
-    /*API.send("GET_PRODUCTION_TASKS", null, {
+    API.send("GET_PRODUCTION_TASKS", null, {
         id: getCryptoId()
     }).then(response => {
 
         if(response === undefined || response === null) {
             showEmptyFrame();
             throw new Error(`API.SEND: Response data is undefined or empty!`);
-        }*/
+        }
         if (response.data?.data?.spreadAmounts?.accordingToHours || response.data?.data?.spreadAmounts?.wholeBrigade) {
             spreadAmounts.accordingToHours = response.data.data.spreadAmounts.accordingToHours;
             spreadAmounts.wholeBrigade = response.data.data.spreadAmounts.wholeBrigade;
+            showSpreadingAmountLabel()
         }
         hideEmptyFrame();
 
@@ -162,11 +66,11 @@ function initialize() {
         // План/факт виконання
         projectExec.append(
             `${response.data.data.plan_amount}/${response.data.data.fact_amount} 
-            (${Math.round(response.data.data.fact_amount/response.data.data.plan_amount)}%)`);
+            (${Math.round(response.data.data.fact_amount/response.data.data.plan_amount*100)}%)`);
     
         // Загальна кількість виконаних робіт, од. виміру
         factCount.placeholder = `Загальна кількість, всього ${response.data.data.unit}`;
-    
+
         factCount.addEventListener("change", () => updateCards());
     
         factCount.addEventListener("input", () => {
@@ -211,15 +115,18 @@ function initialize() {
         
         trackingInputChanges();
 
-    /*})
+    })
     .catch(exception => {
         console.error(`Response cannot received: ${exception.message}`);
-    })*/
+    })
 }
 
 
 
-
+function showSpreadingAmountLabel() {
+    document.getElementById("spread_by_hours").style.display = spreadAmounts.accordingToHours ? "" : "none";
+    document.getElementById("spread_among_brigade").style.display = spreadAmounts.wholeBrigade ? "" : "none";
+}
 
 function showEmptyFrame() {
     document.getElementById("main_frame").style.display = "none";
@@ -358,6 +265,8 @@ function createCards(container, data) {
         card.className = "card rounded";
         card.dataset.id = person.tabnum;
         card.dataset.absent = person.absent ?? (spreadAmounts.wholeBrigade ? false : true);
+        card.dataset.spreadAmountsWholeBrigade = spreadAmounts.wholeBrigade;
+        card.dataset.spreadAmountsAccordingToHours = spreadAmounts.accordingToHours;
 
         card.innerHTML += `
             
@@ -396,13 +305,14 @@ function explodeCount() {
 
     let cards = document.querySelectorAll(".card");
     let factCount = parseFloat(document.getElementById('fact-count').value);
+    const presentWorkers = getPresentWorkersAmount();
 
     cards.forEach(card => {
 
         let workingHours = parseFloat(card.querySelector(".indicator").textContent);
     
         // If it is absent or vacation don't calculate
-        if(card.dataset.absent || (!isNumber(workingHours) && !spreadAmounts.wholeBrigade)) {
+        if(card.dataset.absent === 'true' || (!isNumber(workingHours) && !spreadAmounts.wholeBrigade)) {
             return;
         }
 
@@ -414,9 +324,9 @@ function explodeCount() {
             let availableAmount = getAvailableAmount();
             let hoursAmount = getWorkingHoursAmount();
             
-            let rate = availableAmount / hoursAmount;
+            let rate = availableAmount / (spreadAmounts.wholeBrigade ? presentWorkers : hoursAmount);
             
-            let value = (parseFloat(workingHours * rate)).toFixed(2)
+            let value = (spreadAmounts.wholeBrigade ? presentWorkers : parseFloat(workingHours * rate)).toFixed(2)
             
             unitInput.value = isNumber(value) ? value : "";
         }
@@ -627,6 +537,20 @@ function getWorkingHoursAmount() {
         
         amount += isNumber(hourValue) ? hourValue : 0;
 
+    });
+
+    return amount;
+}
+
+function getPresentWorkersAmount() {
+    let amount = 0;
+
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        if (card.dataset.absent !== 'true') {
+            amount++;
+        }
     });
 
     return amount;
