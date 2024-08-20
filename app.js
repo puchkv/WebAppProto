@@ -12,6 +12,11 @@ const Labels = {
 // Масив для збереження вручу відредагованих карток
 const changedCards = new Array();
 
+const spreadAmounts = {
+    accordingToHours: true,
+    wholeBrigade: false
+};
+
 // Start point
 window.addEventListener("load", initialize());
 
@@ -31,7 +36,11 @@ function initialize() {
             showEmptyFrame();
             throw new Error(`API.SEND: Response data is undefined or empty!`);
         }
-
+        if (response.data?.data?.spreadAmounts?.accordingToHours || response.data?.data?.spreadAmounts?.wholeBrigade) {
+            spreadAmounts.accordingToHours = response.data.data.spreadAmounts.accordingToHours;
+            spreadAmounts.wholeBrigade = response.data.data.spreadAmounts.wholeBrigade;
+            showSpreadingAmountLabel()
+        }
         hideEmptyFrame();
 
         const title = document.getElementById('title');
@@ -57,11 +66,11 @@ function initialize() {
         // План/факт виконання
         projectExec.append(
             `${response.data.data.plan_amount}/${response.data.data.fact_amount} 
-            (${Math.round(response.data.data.fact_amount/response.data.data.plan_amount)}%)`);
+            (${Math.round(response.data.data.fact_amount/response.data.data.plan_amount*100)}%)`);
     
         // Загальна кількість виконаних робіт, од. виміру
         factCount.placeholder = `Загальна кількість, всього ${response.data.data.unit}`;
-    
+
         factCount.addEventListener("change", () => updateCards());
     
         factCount.addEventListener("input", () => {
@@ -114,7 +123,10 @@ function initialize() {
 
 
 
-
+function showSpreadingAmountLabel() {
+    document.getElementById("spread_by_hours").style.display = spreadAmounts.accordingToHours ? "" : "none";
+    document.getElementById("spread_among_brigade").style.display = spreadAmounts.wholeBrigade ? "" : "none";
+}
 
 function showEmptyFrame() {
     document.getElementById("main_frame").style.display = "none";
@@ -252,7 +264,9 @@ function createCards(container, data) {
         let card = document.createElement("div");
         card.className = "card rounded";
         card.dataset.id = person.tabnum;
-        card.dataset.absent = person.absent ?? true;
+        card.dataset.absent = person.absent ?? (spreadAmounts.wholeBrigade ? false : true);
+        card.dataset.spreadAmountsWholeBrigade = spreadAmounts.wholeBrigade;
+        card.dataset.spreadAmountsAccordingToHours = spreadAmounts.accordingToHours;
 
         card.innerHTML += `
             
@@ -291,13 +305,14 @@ function explodeCount() {
 
     let cards = document.querySelectorAll(".card");
     let factCount = parseFloat(document.getElementById('fact-count').value);
+    const presentWorkers = getPresentWorkersAmount();
 
     cards.forEach(card => {
 
         let workingHours = parseFloat(card.querySelector(".indicator").textContent);
     
         // If it is absent or vacation don't calculate
-        if(!isNumber(workingHours)) {
+        if(card.dataset.absent === 'true' || (!isNumber(workingHours) && !spreadAmounts.wholeBrigade)) {
             return;
         }
 
@@ -309,9 +324,9 @@ function explodeCount() {
             let availableAmount = getAvailableAmount();
             let hoursAmount = getWorkingHoursAmount();
             
-            let rate = availableAmount / hoursAmount;
+            let rate = availableAmount / (spreadAmounts.wholeBrigade ? presentWorkers : hoursAmount);
             
-            let value = (parseFloat(workingHours * rate)).toFixed(2)
+            let value = (spreadAmounts.wholeBrigade ? presentWorkers : parseFloat(workingHours * rate)).toFixed(2)
             
             unitInput.value = isNumber(value) ? value : "";
         }
@@ -522,6 +537,20 @@ function getWorkingHoursAmount() {
         
         amount += isNumber(hourValue) ? hourValue : 0;
 
+    });
+
+    return amount;
+}
+
+function getPresentWorkersAmount() {
+    let amount = 0;
+
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        if (card.dataset.absent !== 'true') {
+            amount++;
+        }
     });
 
     return amount;
