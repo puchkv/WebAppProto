@@ -326,7 +326,7 @@ function explodeCount() {
             
             let rate = availableAmount / (spreadAmounts.wholeBrigade ? presentWorkers : hoursAmount);
             
-            let value = (spreadAmounts.wholeBrigade ? presentWorkers : parseFloat(workingHours * rate)).toFixed(2)
+            let value = (spreadAmounts.wholeBrigade ? rate : parseFloat(workingHours * rate)).toFixed(2)
             
             unitInput.value = isNumber(value) ? value : "";
         }
