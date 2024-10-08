@@ -305,7 +305,7 @@ function explodeCount() {
 
     let cards = document.querySelectorAll(".card");
     let factCount = parseFloat(document.getElementById('fact-count').value);
-    const presentWorkers = getPresentWorkersAmount();
+    const presentWorkers = getPresentWorkersAmount() - changedCards.length;
 
     cards.forEach(card => {
 
