@@ -258,9 +258,17 @@ function isNumber(value) {
 
 
 function createCards(container, data) {
+    let enteredAmount = 0
+    data.persons_list.forEach(person => {
+        enteredAmount += person.amount || 0
+    })
+
+    if (enteredAmount) {
+        const factCount = document.getElementById('fact-count');
+        factCount.value = enteredAmount
+    }
 
     data.persons_list.forEach(person => {
-
         let card = document.createElement("div");
         card.className = "card rounded";
         card.dataset.id = person.tabnum;
@@ -268,6 +276,7 @@ function createCards(container, data) {
         card.dataset.spreadAmountsWholeBrigade = spreadAmounts.wholeBrigade;
         card.dataset.spreadAmountsAccordingToHours = spreadAmounts.accordingToHours;
 
+        const enteredPersent = person.amount ? ((parseFloat(person.amount) * 100) / enteredAmount).toFixed(2) : 0
         card.innerHTML += `
             
         <div class="card-header">
@@ -283,7 +292,7 @@ function createCards(container, data) {
             <div class="label-input rounded">
                 <span>Кількість в ${ data.unit }</span>
                 <input type="number" class="transparent" 
-                    placeholder="${ data.unit }" name="unit-count" disabled />
+                    placeholder="${ data.unit }" name="unit-count" ${person.amount ? 'value="' + person.amount + '"': 'disabled'}/>
                 <i class='error-icon'>
                     <img src='icons/danger.svg' />
                 </i>
@@ -292,13 +301,12 @@ function createCards(container, data) {
             <div class="label-input rounded">
                 <span>Кількість в %</span>
                 <input type="text" class="transparent" 
-                    placeholder="%" name="percent-count" disabled />
+                    placeholder="%" name="percent-count" ${person.amount ? 'value="' + enteredPersent + '"': ''} disabled/>
             </div>
         </div>`;
-    
+
         container.append(card);
     });
-
 }
 
 function explodeCount() {
